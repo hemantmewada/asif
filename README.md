@@ -1,34 +1,44 @@
 # Secure View-Only Document Portal (Laravel)
 
-This implementation provides a minimal Laravel structure for a secure document portal with two roles:
+This repository is now a **Laravel project scaffold** (including `composer.json`) for a secure view-only document portal.
 
-- **Uploader**: can upload `pdf`, `docx`, `pptx`, `txt`, `xlsx`.
+## Roles
+
+- **Uploader**: uploads `pdf`, `docx`, `pptx`, `txt`, `xlsx`.
 - **Viewer**: can open browser previews only.
 
 ## Security model
 
-- Files are stored on a private disk (`storage/app/private-documents`) and never exposed by URL.
-- Viewer route streams inline preview response (`Content-Disposition: inline`).
-- For Office documents (`docx`, `pptx`, `xlsx`), preview rendering converts to PDF via headless LibreOffice (`soffice`) and streams the generated PDF from server storage.
+- Originals are stored only on a private disk (`storage/app/private-documents`).
+- No raw storage URLs are exposed to users.
+- Viewer endpoint streams inline previews (`Content-Disposition: inline`).
+- Office docs (`docx`, `pptx`, `xlsx`) are converted server-side to PDF using headless LibreOffice (`soffice`).
 
-## Main files
+## Quick start
 
-- `app/Http/Controllers/DocumentController.php`
-- `app/Services/DocumentPreviewService.php`
-- `app/Http/Middleware/EnsureUserHasRole.php`
-- `app/Models/Document.php`
-- `routes/web.php`
+1. Install dependencies:
+   ```bash
+   composer install
+   ```
+2. Configure environment:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+3. Run migrations and seeders:
+   ```bash
+   php artisan migrate --seed
+   ```
+4. Start the app:
+   ```bash
+   php artisan serve
+   ```
 
-## Setup (on top of a standard Laravel app)
-
-1. Ensure Laravel dependencies are installed.
-2. Add the files from this repo into a Laravel project.
-3. Configure auth scaffolding and login pages.
-4. Run migrations and seeders:
-   - `php artisan migrate --seed`
-5. Install LibreOffice on the server for Office-to-PDF conversion.
-
-## Demo users (seeded)
+## Demo users
 
 - `uploader@example.com` / `password`
 - `viewer@example.com` / `password`
+
+## Important runtime dependency
+
+Install LibreOffice on the server to support Office-to-PDF preview conversion.
